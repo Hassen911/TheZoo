@@ -1,53 +1,619 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" class="h-full bg-[#0d0d0d] text-zinc-100 selection:bg-[#00ff66] selection:text-black">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Mia Playlist</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #121212; color: white; text-align: center; padding: 50px; }
-        .player-container { background: #1e1e1e; max-width: 400px; margin: 0 auto; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        audio { width: 100%; margin: 20px 0; }
-        .playlist { list-style: none; padding: 0; text-align: left; }
-        .playlist li { padding: 10px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.2s; }
-        .playlist li:hover { background: #282828; color: #1db954; }
-        .active { color: #1db954; font-weight: bold; }
-    </style>
-</head>
-<body>
+    <title>LO ZOO - Official Audio Deck</title>
 
-    <h1>I Miei Brani</h1>
-    
-    <div class="player-container">
-        <h3 id="track-title">Seleziona una canzone</h3>
-        <!-- Il player audio nativo di HTML5 -->
-        <audio id="audio-player" controls></audio>
-        
-        <ul class="playlist">
-            <!-- Sostituisci 'canzone1.mp3' con i nomi reali dei tuoi file -->
-            <li onclick="playSong('audio/Mirage.mp3', 'Nome Canzone 1', this)">🎵 Nome Canzone 1</li>
-            <li onclick="playSong('audio/canzone2.mp3', 'Nome Canzone 2', this)">🎵 Nome Canzone 2</li>
-            <li onclick="playSong('audio/canzone3.mp3', 'Nome Canzone 3', this)">🎵 Nome Canzone 3</li>
-        </ul>
-    </div>
-
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        function playSong(audioSrc, title, element) {
-            const player = document.getElementById('audio-player');
-            const titleDisplay = document.getElementById('track-title');
-            
-            // Imposta la sorgente audio e il titolo
-            player.src = audioSrc;
-            titleDisplay.innerText = title;
-            
-            // Rimuove la classe 'active' dagli altri elementi e la assegna a quello cliccato
-            document.querySelectorAll('.playlist li').forEach(li => li.classList.remove('active'));
-            element.classList.add('active');
-            
-            // Avvia la riproduzione
-            player.play();
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#0d0d0d',
+                            card: '#141414',
+                            cardHover: '#1c1c1c',
+                            green: '#00ff66',
+                            greenDark: '#05cd54',
+                            border: '#222222'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
+                    }
+                }
+            }
         }
     </script>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0d0d0d;
+        }
+
+        /* Custom subtle scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d0d0d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #262626;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ff66;
+        }
+
+        /* Clean custom range sliders */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            border-radius: 9999px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: #00ff66;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -4px;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+            transition: transform 0.15s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            background: #ffffff;
+        }
+
+        /* Animated playing bar lines */
+        .eq-line {
+            width: 2px;
+            background-color: #00ff66;
+            border-radius: 1px;
+            animation: eqPulse 0.7s ease-in-out infinite alternate;
+        }
+        .eq-line:nth-child(1) { height: 10px; animation-delay: 0.1s; }
+        .eq-line:nth-child(2) { height: 16px; animation-delay: 0.3s; }
+        .eq-line:nth-child(3) { height: 8px;  animation-delay: 0.2s; }
+
+        @keyframes eqPulse {
+            0% { height: 4px; }
+            100% { height: 16px; }
+        }
+    </style>
+</head>
+<body class="min-h-screen w-full flex flex-col justify-between p-3 sm:p-6 md:p-8 antialiased">
+
+    <!-- BAND HEADER -->
+    <header class="max-w-2xl w-full mx-auto flex items-center justify-between pb-4 sm:pb-6">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-brand-green/10 border border-brand-green/30 flex items-center justify-center text-brand-green">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-2">
+                    LO ZOO
+                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20">Official</span>
+                </h1>
+                <p class="text-[11px] text-zinc-500 font-medium">Lettore Musicale Ufficiale</p>
+            </div>
+        </div>
+
+        <div class="text-right">
+            <span class="text-xs font-mono text-zinc-400" id="total-tracks-label">0 Brani</span>
+        </div>
+    </header>
+
+    <!-- MAIN COMPACT PLAYER CONTAINER -->
+    <main class="max-w-2xl w-full mx-auto my-auto flex flex-col gap-5">
+        
+        <!-- CURRENT TRACK CARD -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
+            
+            <!-- Cover Art Image -->
+            <div class="relative w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 rounded-xl overflow-hidden bg-zinc-900 border border-white/5 shadow-md">
+                <img id="cover-art" src="https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?w=400&auto=format&fit=crop&q=80" alt="Copertina Brano" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/10"></div>
+            </div>
+
+            <!-- Track Info & Controls -->
+            <div class="flex-1 w-full flex flex-col justify-between gap-3 text-center sm:text-left">
+                
+                <!-- Track Title & Album -->
+                <div>
+                    <h2 id="display-title" class="text-lg sm:text-xl font-bold text-white truncate tracking-tight">Caricamento...</h2>
+                    <p id="display-album" class="text-xs text-brand-green font-semibold mt-0.5 truncate">LO ZOO</p>
+                </div>
+
+                <!-- SEEK BAR & TIMERS -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between text-[11px] font-mono text-zinc-400">
+                        <span id="time-current">0:00</span>
+                        <span id="time-total">0:00</span>
+                    </div>
+                    <div class="relative flex items-center">
+                        <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" oninput="handleSeek(this.value)" class="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- PLAYBACK CONTROLS -->
+                <div class="flex items-center justify-between pt-1">
+                    
+                    <!-- Shuffle Button -->
+                    <button id="btn-shuffle" onclick="toggleShuffle()" class="relative p-2 text-zinc-400 hover:text-white transition rounded-lg" title="Riproduzione Casuale">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.45 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+                        <span id="shuffle-dot" class="hidden absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-brand-green rounded-full"></span>
+                    </button>
+
+                    <!-- Previous Button -->
+                    <button onclick="prevTrack()" class="p-2 text-zinc-300 hover:text-brand-green transition active:scale-95" title="Precedente">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                    </button>
+
+                    <!-- Main Play/Pause Button -->
+                    <button onclick="togglePlay()" class="w-11 h-11 rounded-full bg-brand-green hover:bg-brand-greenDark text-black flex items-center justify-center transition-all shadow-md shadow-brand-green/20 active:scale-95" title="Play / Pausa">
+                        <svg id="icon-play" class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <svg id="icon-pause" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                    </button>
+
+                    <!-- Next Button -->
+                    <button onclick="nextTrack()" class="p-2 text-zinc-300 hover:text-brand-green transition active:scale-95" title="Successivo">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                    </button>
+
+                    <!-- Repeat Button (Off / All / One) -->
+                    <button id="btn-repeat" onclick="cycleRepeat()" class="relative p-2 text-zinc-400 hover:text-white transition rounded-lg" title="Ripetizione">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+                        <span id="repeat-badge" class="hidden absolute -top-1 -right-1 text-[8px] font-black bg-brand-green text-black w-3 h-3 rounded-full flex items-center justify-center">1</span>
+                        <span id="repeat-dot" class="hidden absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-brand-green rounded-full"></span>
+                    </button>
+
+                    <!-- Volume Control (Compact) -->
+                    <div class="hidden sm:flex items-center gap-1.5 ml-2 border-l border-zinc-800 pl-3">
+                        <button onclick="toggleMute()" class="text-zinc-400 hover:text-brand-green transition">
+                            <svg id="vol-high" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                            <svg id="vol-mute" class="w-4 h-4 hidden text-red-400" fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                        </button>
+                        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.8" oninput="handleVolume(this.value)" class="w-16 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CLEAN PLAYLIST -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 sm:p-5 shadow-xl">
+            <div class="flex items-center justify-between pb-3 mb-2 border-b border-zinc-800/80">
+                <span class="text-xs font-bold uppercase tracking-wider text-zinc-400">Scaletta Brani</span>
+                <span class="text-[11px] text-zinc-500">Formato Audio MP3</span>
+            </div>
+
+            <!-- Scrollable List of Songs -->
+            <div id="tracks-list" class="space-y-1 max-h-60 overflow-y-auto pr-1">
+                <!-- Dynamically generated tracks -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="max-w-2xl w-full mx-auto pt-4 text-center text-xs text-zinc-600">
+        <p>&copy; LO ZOO &middot; Tutti i diritti riservati</p>
+    </footer>
+
+    <!-- TOAST MESSAGES -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-zinc-900 border border-brand-green/30 text-white text-xs px-3.5 py-2.5 rounded-xl shadow-2xl transition-all duration-300 opacity-0 translate-y-2 pointer-events-none z-50 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-green"></span>
+        <span id="toast-msg">Notifica</span>
+    </div>
+
+    <!-- AUDIO ENGINE -->
+    <audio id="audio-engine" preload="metadata"></audio>
+
+    <script>
+        /* CONFIGURAZIONE CANZONI DEL GRUPPO "LO ZOO" */
+        /* Sostituisci i percorsi con i tuoi file MP3 reali salvati nella cartella di progetto */
+        const zooTracks = [
+            {
+                id: '1',
+                title: 'Ruggito',
+                album: 'Giungla Urbana',
+                src: 'audio/ruggito.mp3',
+                duration: '3:45',
+                cover: 'https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?w=400&auto=format&fit=crop&q=80'
+            },
+            {
+                id: '2',
+                title: 'Giungla Urbana',
+                album: 'Giungla Urbana',
+                src: 'audio/giungla-urbana.mp3',
+                duration: '4:12',
+                cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=400&auto=format&fit=crop&q=80'
+            },
+            {
+                id: '3',
+                title: 'Gabbie Aperte',
+                album: 'Giungla Urbana',
+                src: 'audio/gabbie-aperte.mp3',
+                duration: '3:58',
+                cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&auto=format&fit=crop&q=80'
+            },
+            {
+                id: '4',
+                title: 'Istinto Selvaggio',
+                album: 'Singolo 2024',
+                src: 'audio/istinto-selvaggio.mp3',
+                duration: '4:30',
+                cover: 'https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=400&auto=format&fit=crop&q=80'
+            },
+            {
+                id: '5',
+                title: 'Notte da Leoni',
+                album: 'Singolo 2024',
+                src: 'audio/notte-da-leoni.mp3',
+                duration: '3:20',
+                cover: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400&auto=format&fit=crop&q=80'
+            },
+            {
+                id: '6',
+                title: 'Branco',
+                album: 'Giungla Urbana',
+                src: 'audio/branco.mp3',
+                duration: '4:05',
+                cover: 'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=400&auto=format&fit=crop&q=80'
+            }
+        ];
+
+        /* PLAYER STATE */
+        let currentIndex = 0;
+        let isPlaying = false;
+        let isShuffle = false;
+        let repeatState = 0; // 0 = OFF, 1 = REPEAT ALL, 2 = REPEAT ONE
+        let previousVolume = 0.8;
+
+        /* DOM ELEMENTS */
+        const audioEngine = document.getElementById('audio-engine');
+        const tracksListContainer = document.getElementById('tracks-list');
+        const totalTracksLabel = document.getElementById('total-tracks-label');
+
+        const displayTitle = document.getElementById('display-title');
+        const displayAlbum = document.getElementById('display-album');
+        const coverArt = document.getElementById('cover-art');
+
+        const seekSlider = document.getElementById('seek-slider');
+        const volumeSlider = document.getElementById('volume-slider');
+
+        const timeCurrent = document.getElementById('time-current');
+        const timeTotal = document.getElementById('time-total');
+
+        const iconPlay = document.getElementById('icon-play');
+        const iconPause = document.getElementById('icon-pause');
+
+        const btnShuffle = document.getElementById('btn-shuffle');
+        const shuffleDot = document.getElementById('shuffle-dot');
+
+        const btnRepeat = document.getElementById('btn-repeat');
+        const repeatDot = document.getElementById('repeat-dot');
+        const repeatBadge = document.getElementById('repeat-badge');
+
+        /* INIT */
+        window.addEventListener('DOMContentLoaded', () => {
+            totalTracksLabel.textContent = `${zooTracks.length} Brani`;
+            renderPlaylist();
+            setupAudioEngine();
+            setupKeyboardShortcuts();
+
+            updateSliderGradient(volumeSlider, volumeSlider.value * 100);
+            updateSliderGradient(seekSlider, 0);
+
+            if (zooTracks.length > 0) {
+                loadTrack(0, false);
+            }
+        });
+
+        function setupAudioEngine() {
+            audioEngine.addEventListener('timeupdate', () => {
+                if (audioEngine.duration) {
+                    const pct = (audioEngine.currentTime / audioEngine.duration) * 100;
+                    seekSlider.value = pct;
+                    updateSliderGradient(seekSlider, pct);
+                    timeCurrent.textContent = formatTime(audioEngine.currentTime);
+                }
+            });
+
+            audioEngine.addEventListener('loadedmetadata', () => {
+                timeTotal.textContent = formatTime(audioEngine.duration);
+            });
+
+            audioEngine.addEventListener('ended', () => {
+                handleTrackEnd();
+            });
+
+            audioEngine.addEventListener('error', () => {
+                showToast(`File "${zooTracks[currentIndex]?.src}" non trovato in audio/`);
+                setIsPlaying(false);
+            });
+        }
+
+        function loadTrack(index, autoPlay = true) {
+            if (index < 0 || index >= zooTracks.length) return;
+
+            currentIndex = index;
+            const track = zooTracks[currentIndex];
+
+            audioEngine.src = track.src;
+            audioEngine.load();
+
+            displayTitle.textContent = track.title;
+            displayAlbum.textContent = `LO ZOO \u00B7 ${track.album}`;
+            coverArt.src = track.cover;
+
+            renderPlaylist();
+
+            if (autoPlay) {
+                audioEngine.play().then(() => {
+                    setIsPlaying(true);
+                }).catch(() => {
+                    setIsPlaying(false);
+                });
+            }
+        }
+
+        function togglePlay() {
+            if (zooTracks.length === 0) return;
+
+            if (isPlaying) {
+                audioEngine.pause();
+                setIsPlaying(false);
+            } else {
+                audioEngine.play().then(() => {
+                    setIsPlaying(true);
+                }).catch(() => {
+                    showToast("Errore durante la riproduzione audio");
+                });
+            }
+        }
+
+        function setIsPlaying(playing) {
+            isPlaying = playing;
+            if (isPlaying) {
+                iconPlay.classList.add('hidden');
+                iconPause.classList.remove('hidden');
+            } else {
+                iconPlay.classList.remove('hidden');
+                iconPause.classList.add('hidden');
+            }
+            renderPlaylist();
+        }
+
+        function nextTrack() {
+            if (zooTracks.length === 0) return;
+
+            if (isShuffle) {
+                let randIndex = Math.floor(Math.random() * zooTracks.length);
+                if (zooTracks.length > 1 && randIndex === currentIndex) {
+                    randIndex = (currentIndex + 1) % zooTracks.length;
+                }
+                loadTrack(randIndex, true);
+            } else {
+                let nextIdx = currentIndex + 1;
+                if (nextIdx >= zooTracks.length) {
+                    if (repeatState === 1) { // Repeat All
+                        loadTrack(0, true);
+                    } else {
+                        audioEngine.pause();
+                        audioEngine.currentTime = 0;
+                        setIsPlaying(false);
+                    }
+                } else {
+                    loadTrack(nextIdx, true);
+                }
+            }
+        }
+
+        function prevTrack() {
+            if (zooTracks.length === 0) return;
+
+            if (audioEngine.currentTime > 3) {
+                audioEngine.currentTime = 0;
+                return;
+            }
+
+            let prevIdx = currentIndex - 1;
+            if (prevIdx < 0) {
+                prevIdx = zooTracks.length - 1;
+            }
+            loadTrack(prevIdx, true);
+        }
+
+        function handleTrackEnd() {
+            if (repeatState === 2) { // Repeat One
+                audioEngine.currentTime = 0;
+                audioEngine.play();
+            } else {
+                nextTrack();
+            }
+        }
+
+        function toggleShuffle() {
+            isShuffle = !isShuffle;
+            if (isShuffle) {
+                btnShuffle.classList.add('text-brand-green');
+                btnShuffle.classList.remove('text-zinc-400');
+                shuffleDot.classList.remove('hidden');
+                showToast("Casuale: ON");
+            } else {
+                btnShuffle.classList.remove('text-brand-green');
+                btnShuffle.classList.add('text-zinc-400');
+                shuffleDot.classList.add('hidden');
+                showToast("Casuale: OFF");
+            }
+        }
+
+        function cycleRepeat() {
+            repeatState = (repeatState + 1) % 3;
+
+            if (repeatState === 0) {
+                btnRepeat.className = "relative p-2 text-zinc-400 hover:text-white transition rounded-lg";
+                repeatDot.classList.add('hidden');
+                repeatBadge.classList.add('hidden');
+                showToast("Ripetizione: OFF");
+            } else if (repeatState === 1) {
+                btnRepeat.className = "relative p-2 text-brand-green transition rounded-lg";
+                repeatDot.classList.remove('hidden');
+                repeatBadge.classList.add('hidden');
+                showToast("Ripetizione: TUTTI I BRANI");
+            } else if (repeatState === 2) {
+                btnRepeat.className = "relative p-2 text-brand-green transition rounded-lg";
+                repeatDot.classList.remove('hidden');
+                repeatBadge.classList.remove('hidden');
+                showToast("Ripetizione: SINGOLO BRANO");
+            }
+        }
+
+        function handleSeek(val) {
+            if (audioEngine.duration) {
+                const target = (val / 100) * audioEngine.duration;
+                audioEngine.currentTime = target;
+                updateSliderGradient(seekSlider, val);
+            }
+        }
+
+        function handleVolume(val) {
+            audioEngine.volume = val;
+            updateSliderGradient(volumeSlider, val * 100);
+
+            const volHigh = document.getElementById('vol-high');
+            const volMute = document.getElementById('vol-mute');
+
+            if (parseFloat(val) === 0) {
+                volHigh.classList.add('hidden');
+                volMute.classList.remove('hidden');
+            } else {
+                volHigh.classList.remove('hidden');
+                volMute.classList.add('hidden');
+            }
+        }
+
+        function toggleMute() {
+            if (audioEngine.volume > 0) {
+                previousVolume = audioEngine.volume;
+                volumeSlider.value = 0;
+                handleVolume(0);
+            } else {
+                volumeSlider.value = previousVolume || 0.8;
+                handleVolume(volumeSlider.value);
+            }
+        }
+
+        function updateSliderGradient(slider, percent) {
+            slider.style.background = `linear-gradient(to right, #00ff66 0%, #00ff66 ${percent}%, #262626 ${percent}%, #262626 100%)`;
+        }
+
+        function renderPlaylist() {
+            tracksListContainer.innerHTML = '';
+
+            zooTracks.forEach((track, idx) => {
+                const isActive = (currentIndex === idx);
+
+                const item = document.createElement('div');
+                item.className = `group flex items-center justify-between p-2.5 rounded-xl transition-all cursor-pointer border ${isActive ? 'bg-brand-green/10 border-brand-green/30 text-white' : 'bg-transparent border-transparent hover:bg-brand-cardHover text-zinc-300'}`;
+                item.onclick = () => loadTrack(idx, true);
+
+                let statusBadge = `<span class="w-5 text-center text-xs font-mono text-zinc-500 group-hover:text-brand-green">${idx + 1}</span>`;
+
+                if (isActive && isPlaying) {
+                    statusBadge = `
+                        <div class="w-5 flex items-end justify-center gap-0.5 h-3">
+                            <div class="eq-line"></div>
+                            <div class="eq-line"></div>
+                            <div class="eq-line"></div>
+                        </div>
+                    `;
+                }
+
+                item.innerHTML = `
+                    <div class="flex items-center gap-3 min-w-0 pr-2">
+                        ${statusBadge}
+                        <div class="flex flex-col truncate">
+                            <span class="text-xs font-semibold truncate ${isActive ? 'text-brand-green font-bold' : 'text-zinc-200'}">${escapeHtml(track.title)}</span>
+                            <span class="text-[10px] text-zinc-500 truncate">${escapeHtml(track.album)}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <span class="text-[11px] font-mono text-zinc-500">${track.duration}</span>
+                    </div>
+                `;
+
+                tracksListContainer.appendChild(item);
+            });
+        }
+
+        function setupKeyboardShortcuts() {
+            window.addEventListener('keydown', (e) => {
+                if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    togglePlay();
+                } else if (e.code === 'ArrowRight') {
+                    e.preventDefault();
+                    nextTrack();
+                } else if (e.code === 'ArrowLeft') {
+                    e.preventDefault();
+                    prevTrack();
+                }
+            });
+        }
+
+        function formatTime(sec) {
+            if (isNaN(sec)) return "0:00";
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+
+            toast.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+            }, 1800);
+        }
+    </script>
 </body>
 </html>
